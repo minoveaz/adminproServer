@@ -14,21 +14,16 @@ const port = process.env.PORT
 dbConnection();
 
 // Configurar CORS
-app.use(cors())
+app.use(cors());
 
-//RKAYHHJK57FPW5Du
-//mean_user
+// body read and parsing
+app.use( express.json());
 
 //rutas
-app.get('/', (req, res) => {
-  res.json({
-      ok: true,
-      msg: 'hola mundo'
-  })
-})
+app.use('/api/users', require('./routes/users.router'));
 
 app.listen(port, () => {
-  console.log(`Admin Pro Server listening at http://localhost:${port}`)
+  console.log(`Admin Pro Server listening at http://localhost:${port}`);
 })
 
 
