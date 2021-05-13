@@ -115,11 +115,12 @@ const deleteUser = async(req, res = response) => {
             })
         }
 
-        await User.findByIdAndDelete(uid)
+        await User.findByIdAndDelete(uid);
+
 
         res.json({
             ok: true,
-            uid
+            msg: 'User deleted'
         });
         
     } catch (error) {

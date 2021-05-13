@@ -21,10 +21,13 @@ app.use( express.json());
 
 //rutas
 app.use('/api/users', require('./routes/users.router'));
+app.use('/api/login', require('./routes/auth.router'));
 
 app.listen(port, () => {
   console.log(`Admin Pro Server listening at http://localhost:${port}`);
 })
+
+
 
 
 
