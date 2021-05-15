@@ -2,6 +2,8 @@ const { response } = require('express')
 const  bcrypt  = require('bcryptjs')
 const { generateJWT } = require('../helpers/jwt');
 
+const {sendEmail} = require('../services/createAccountEmail.service')
+
 const User = require('../models/user.model')
 
 
@@ -41,6 +43,11 @@ const createUsers = async ( req, res = response ) => {
 
         // save user in DB
         await user.save()
+
+        // send email to user
+
+        sendEmail();
+
 
         // generate Token 
         const token = await generateJWT(user.id);

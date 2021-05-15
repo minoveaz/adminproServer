@@ -38,8 +38,6 @@ router.put('/:id',
 router.delete('/:id',
     [
         validateJWT,
-        check('name','Name is obligatory').not().isEmpty(),
-        check('lastName','Lastname is obligatory').not().isEmpty(),
         check('email','Email is obligatory').isEmail(),
         validateField,
     ] ,
