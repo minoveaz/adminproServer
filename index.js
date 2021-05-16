@@ -21,6 +21,8 @@ app.use( express.json());
 
 //rutas
 app.use('/api/users', require('./routes/users.router'));
+app.use('/api/hospitals', require('./routes/hospitals.router'));
+app.use('/api/doctors', require('./routes/doctors.router'));
 app.use('/api/login', require('./routes/auth.router'));
 
 app.listen(port, () => {

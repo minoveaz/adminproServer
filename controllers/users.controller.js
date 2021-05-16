@@ -9,13 +9,18 @@ const User = require('../models/user.model')
 
 const getUsers = async ( req, res ) => {
 
-    const users = await User.find({}, 'name lastName email role google');
+    const from = Number(req.query.from) || 0; 
+    console.log(from);
+    
+    const users = await User.find({}, 'name lastName email role google')
+                            .skip(from)
+                            .limit(5);
+    const total = await User.count();
 
     res.json({
         ok: true, 
-        msg: 'Get users',
         users,
-        uid: req.uid
+        total
     })
 }
 
@@ -46,7 +51,7 @@ const createUsers = async ( req, res = response ) => {
 
         // send email to user
 
-        sendEmail();
+        sendEmail(user);
 
 
         // generate Token 

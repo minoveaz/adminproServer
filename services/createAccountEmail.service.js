@@ -1,7 +1,7 @@
 var nodemailer = require('nodemailer');
 
 
-const sendEmail = async (req, res ) => {
+const sendEmail = async (user, req, res) => {
 
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
@@ -14,9 +14,9 @@ const sendEmail = async (req, res ) => {
 
     const mailOptions ={
         from: "Remitente",
-        to:"ing.miller.vega@gmail.com",
-        subject: "Mensaje Prueba Email NodeJS",
-        text: "Este es un mensaje de Prueba"
+        to:user.email,
+        subject: "Confirmación de Cuenta Creada",
+        text: `Hola ${user.name}!, tu cuenta con el email: ${user.email} ha sido creada correctamente`
     }
 
     const info = await transporter.sendMail(mailOptions, (error, info) => {
@@ -28,7 +28,6 @@ const sendEmail = async (req, res ) => {
             console.log(req.body)
         }
     });
-
 }
 
 module.exports = {
