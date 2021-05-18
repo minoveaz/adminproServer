@@ -12,15 +12,15 @@ const getUsers = async ( req, res ) => {
     const from = Number(req.query.from) || 0; 
     console.log(from);
     
-    const users = await User.find({}, 'name lastName email role google')
+    const users = await User.find({}, 'name lastName email role google img')
                             .skip(from)
                             .limit(5);
-    const total = await User.count();
+    const total = await User.countDocuments();
 
     res.json({
         ok: true, 
         users,
-        total
+        total,
     })
 }
 
