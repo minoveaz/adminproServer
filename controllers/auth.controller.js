@@ -48,6 +48,20 @@ const login = async (req, res = response) => {
 
 } 
 
+const renewToken = async(req, res = response) =>{
+
+    const uid = req.uid
+
+    // generate JWT Token
+    const token = await generateJWT(uid);
+
+    res.json({
+        ok:true,
+        token
+    })
+}
+
 module.exports = {
-    login
+    login,
+    renewToken
 }

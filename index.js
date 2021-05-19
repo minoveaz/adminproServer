@@ -19,6 +19,10 @@ app.use(cors());
 // body read and parsing
 app.use( express.json());
 
+// public directory
+
+app.use(express.static('public'));
+
 //rutas
 app.use('/api/users', require('./routes/users.router'));
 app.use('/api/hospitals', require('./routes/hospitals.router'));

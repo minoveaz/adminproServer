@@ -4,7 +4,8 @@ const Hospital = require('../models/hospital.model')
 const getHospital =  async(req, res = response) => {
 
     const hospitals = await Hospital.find()
-                                        .populate('user','name', 'img');
+                                        .populate('user','name')
+                                        .populate('hospital','name','img');
 
     res.json({
         ok: true, 
@@ -34,11 +35,34 @@ const createHospital = async (req,res) => {
     }
 }
 
-const updateHospital = (req,res) => {
-    res.json({
-        ok: true, 
-        msg: 'Update Hospitals',
-    })
+const updateHospital = async (req,res) => {
+    const uid = req.uid;
+
+    try {
+        
+        const hospitalDB = await Hospital.findById(uid);
+
+        if(!hospitalDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Hospital does not exist'
+            }) 
+        }
+
+        res.json({
+            ok: true, 
+            msg: 'Update Hospitals',
+            hospitalDB
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Cant update this Hospital'
+        })
+    }
+
 }
 
 const deleteHospital = (req,res) => {
