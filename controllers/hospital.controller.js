@@ -36,11 +36,12 @@ const createHospital = async (req,res) => {
 }
 
 const updateHospital = async (req,res) => {
-    const uid = req.uid;
+    const id = req.params.id;
+    const uid = req.uid
 
     try {
         
-        const hospitalDB = await Hospital.findById(uid);
+        const hospitalDB = await Hospital.findById(id);
 
         if(!hospitalDB){
             return res.status(404).json({
@@ -49,10 +50,17 @@ const updateHospital = async (req,res) => {
             }) 
         }
 
+        const changeHospitalData = {
+            ...req.body,
+            user: uid
+        }
+
+        const updatedHospital = await Hospital.findByIdAndUpdate(id,changeHospitalData, {new: true})
+
         res.json({
             ok: true, 
             msg: 'Update Hospitals',
-            hospitalDB
+            hospital: updatedHospital
         })
 
     } catch (error) {
@@ -65,11 +73,37 @@ const updateHospital = async (req,res) => {
 
 }
 
-const deleteHospital = (req,res) => {
-    res.json({
-        ok: true, 
-        msg: 'Delete Hospitals',
-    })
+const deleteHospital = async (req,res) => {
+    const id = req.params.id;
+    const uid = req.uid
+
+    try {
+
+        const hospitalDB = await Hospital.findById(id);
+
+        if(!hospitalDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Hospital does not exist'
+            }) 
+        }
+
+        await Hospital.findByIdAndDelete(id);
+        
+        res.json({
+            ok: true, 
+            msg: 'Delete Hospitals',
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Cant delete this Hospital'
+        })
+    }
+
+    
 }
 
 module.exports = {

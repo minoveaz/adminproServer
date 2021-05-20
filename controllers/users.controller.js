@@ -102,6 +102,7 @@ const updateUser = async ( req, res = response) => {
         }
 
         fields.email = email;
+        //new:true brings the document updated
         const updatedUser = await User.findByIdAndUpdate(uid, fields, {new: true});
 
         res.json({

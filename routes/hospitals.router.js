@@ -25,12 +25,18 @@ router.post('/',
 );
 
 router.put('/:id',
-    [],
+    [
+        validateJWT,
+        check('name', 'The Hospital name is required').not().isEmpty(),
+        validateField
+    ],
     updateHospital
 )
 
 router.delete('/:id',
-    [] ,
+    [
+        validateJWT  
+    ] ,
     deleteHospital)
 
 
