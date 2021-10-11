@@ -75,7 +75,6 @@ const updateHospital = async (req,res) => {
 
 const deleteHospital = async (req,res) => {
     const id = req.params.id;
-    const uid = req.uid
 
     try {
 
@@ -92,7 +91,7 @@ const deleteHospital = async (req,res) => {
         
         res.json({
             ok: true, 
-            msg: 'Delete Hospitals',
+            msg: 'Deleted Hospital',
         })
 
     } catch (error) {

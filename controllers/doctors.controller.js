@@ -36,23 +36,77 @@ const createDoctor = async (req,res) => {
     }
 }
 
-const updateDoctor = (req,res) => {
-    res.json({
-        ok: true, 
-        msg: 'Update Doctor',
-    })
+const updateDoctor = async (req,res) => {
+    const id = req.params.id;
+    const uid = req.uid;
+
+    
+    try {
+        
+        const doctorDB = await Doctor.findById(id);
+
+        if(!doctorDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Doctor does not exist'
+            }) 
+        }
+
+        const changeDoctorData = {
+            ...req.body,
+            user: uid
+        }
+
+        const updatedDoctor = await Doctor.findByIdAndUpdate(id,changeDoctorData, {new: true})
+
+        res.json({
+            ok: true, 
+            msg: 'Update Doctor',
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Cant update this Doctor'
+        })
+    }
 }
 
-const deleteDoctor = (req,res) => {
-    res.json({
-        ok: true, 
-        msg: 'Delete Doctor',
-    })
+const deleteDoctor = async (req,res) => {
+    const id = req.params.id;
+    
+    try {
+        
+        const doctorDB = await Doctor.findById(id);
+
+        if(!doctorDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Doctor does not exist'
+            }) 
+        }
+
+        await Doctor.findByIdAndDelete(id);
+
+        res.json({
+            ok: true, 
+            msg: 'Deleted Doctor',
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Cant Delete this Doctor'
+        })
+    }
 }
 
-module.exports = {
+module.exports = {  
     getDoctor,
     createDoctor,
     updateDoctor,
     deleteDoctor
 }
+

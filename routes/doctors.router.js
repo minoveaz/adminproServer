@@ -30,7 +30,13 @@ router.post('/',
 );
 
 router.put('/:id',
-    [],
+    [
+        validateJWT,
+        check('name', 'The Doctor name is required').not().isEmpty(),
+        check('lastName', 'The Doctor Last name is required').not().isEmpty(),
+        check('hospital', 'Doctor ID Must be valid').isMongoId(),
+        validateField
+    ],
     updateDoctor
 )
 
