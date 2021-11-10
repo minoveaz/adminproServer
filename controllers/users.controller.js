@@ -107,6 +107,7 @@ const updateUser = async ( req, res = response) => {
 
         res.json({
             ok: true,
+            msg: 'User Updated',
             user: updatedUser
         });
 
