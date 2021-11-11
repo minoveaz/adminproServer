@@ -38,7 +38,7 @@ router.put('/:id',
 router.delete('/:id',
     [
         validateJWT,
-        check('email','Email is obligatory').isEmail(),
+       // check('email','Email is obligatory').isEmail(),
         validateField,
     ] ,
     deleteUser)

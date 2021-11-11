@@ -24,7 +24,7 @@ const userSchema = Schema({
     rol:{
         type: String,
         required: true,
-        default: 'USER:ROLE'
+        default: 'USER_ROLE'
     },
     googleLogin:{
         type: Boolean,
