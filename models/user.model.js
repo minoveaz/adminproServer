@@ -30,6 +30,9 @@ const userSchema = Schema({
         type: Boolean,
         default: false
     },
+    phoneNumber:{
+        type: String
+    },
 });
 
 userSchema.method('toJSON', function() {
