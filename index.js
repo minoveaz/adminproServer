@@ -30,6 +30,8 @@ app.use('/api/doctors', require('./routes/doctors.router'));
 app.use('/api/login', require('./routes/auth.router'));
 app.use('/api/searchAll', require('./routes/searchs.router'));
 app.use('/api/upload', require('./routes/upload.router'));
+app.use('/api/events', require('./routes/events.router'));
+
 
 app.listen(port, () => {
   console.log(`Admin Pro Server listening at http://localhost:${port}`);
