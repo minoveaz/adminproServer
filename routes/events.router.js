@@ -9,7 +9,7 @@ const {check } = require('express-validator')
 const { validateJWT } = require('../middlewares/validate-jwt');
 const { validateField  } = require('../middlewares/validate-field');
 
-const { getEvent, createEvent, updateEvent, deleteEvent, createAttende} = require('./../controllers/events.controller')
+const { getEvent, createEvent, updateEvent, deleteEvent, createAttende, deleteAttende} = require('./../controllers/events.controller')
 
 const router = Router();
 

@@ -35,7 +35,8 @@ const EventSchema = Schema({
         required: true,
     },
     attendees:{
-        type: Array
+        type: Schema.Types.ObjectId,
+        ref: 'Attendee'
     }
 },{ collection: 'events'});
 

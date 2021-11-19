@@ -1,12 +1,13 @@
 const { response } = require("express");
-const Event = require('../models/event.model')
-const User = require('../models/user.model')
+const Event = require('../models/event.model');
+const User = require('../models/user.model');
+const Attendee = require('../models/attendee.model');
 
 
 const getEvent = async( req, res = response) =>{
 
     const events = await Event.find()
-                                .populate('event','name','img')
+                                .populate('attendees')
                                 //.populate('user','name','lastName','email','phoneNumber','img')
 
     res.json({
@@ -14,6 +15,7 @@ const getEvent = async( req, res = response) =>{
         events
     })
 }
+
 
 const createEvent = async (req,res) => {
     const uid = req.uid;
@@ -107,22 +109,44 @@ const deleteEvent = async (req, res) => {
 }
 
 const createAttende = async(req,res) => {
-    const uid = req.uid
+    // const uid = req.uid
     const id = req.params.id
-    const newAttende = req.body
+    //const newAttende = req.body
 
+    const newAttende = new Attendee({
+        ...req.body,
+      });
+
+    console.log(newAttende)
+    
     try {
         const eventDB = await Event.findById(id)
 
+        // validate if the event exist in the DB
         if(!eventDB){
             return res.status(404).json({
                 ok: false,
                 msg: 'Event does not exist'
             }) 
         }
+        // validate if there is capacity to add the attendee
+        const capacity = eventDB.capacity
+        const currentAttendees = eventDB.attendees.lenght
+        //const currentAttendees = eventDB.attendees.countDocuments()
+        console.log(capacity)
+        console.log(currentAttendees)       
+        
 
-        console.log(newAttende)
-        const updatedEventAttendee = await Event.findByIdAndUpdate(id, {$push:{attendees: newAttende}}, {new: true})
+        
+        //const updatedEventAttendee = await Event.findByIdAndUpdate(id, {$push:{attendees: newAttende}}, {new: true})
+        
+        // save attendee to the Database
+        const attendeeDB = await newAttende.save();
+        // add attendee to the Event
+        eventDB.attendees.push(attendeeDB.id)
+        // save attendee to the Event
+        await eventDB.save()
+        console.log(eventDB)
 
         res.json({
             ok: true, 
@@ -140,11 +164,16 @@ const createAttende = async(req,res) => {
     }
 }
 
+const deleteAttende = async (req,res) => {
+
+}
+
 
 module.exports = {
     getEvent,
     createEvent,
     updateEvent,
     deleteEvent,
-    createAttende
+    createAttende,
+    deleteAttende
 }
