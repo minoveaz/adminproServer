@@ -1,13 +1,13 @@
 const { response } = require("express");
 const Event = require('../models/event.model');
 const User = require('../models/user.model');
-const Attendee = require('../models/attendee.model');
 
 
-const getEvent = async( req, res = response) =>{
+
+const getEvents = async( req, res = response) =>{
 
     const events = await Event.find()
-                                .populate('attendees')
+                                //populate('attendees')
                                 //.populate('user','name','lastName','email','phoneNumber','img')
 
     res.json({
@@ -108,19 +108,60 @@ const deleteEvent = async (req, res) => {
     }
 }
 
+/*------------------------------------------------------------------- attendees----------------------------------------------------------- */
+/*---------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+const getAttendee = async( req, res = response) =>{
+    const eventId = req.params.id
+    const attendeeId = req.params.attendeeid
+
+    try {
+        
+        const eventDB = await (await Event.findById(eventId)).populate('attendees')
+
+        if(!eventDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Event does not exist'
+            }) 
+        }
+
+        attendeesList = eventDB.attendees
+        
+        const attendee = attendeesList.find( attendee => attendee.id === attendeeId)
+
+        if(!attendee){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Atteende does not exist in this Event'
+            }) 
+        }
+
+        res.json({
+            ok: true, 
+            msg: 'Ateendee Finded',
+            attendee
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "Contact with the Administrator",
+          });
+    }
+    
+    
+}
+
 const createAttende = async(req,res) => {
     // const uid = req.uid
-    const id = req.params.id
-    //const newAttende = req.body
-
-    const newAttende = new Attendee({
-        ...req.body,
-      });
-
-    console.log(newAttende)
+    const eventid = req.params.id
+    const newAttende = req.body
     
     try {
-        const eventDB = await Event.findById(id)
+        const eventDB = await Event.findById(eventid)
 
         // validate if the event exist in the DB
         if(!eventDB){
@@ -131,27 +172,24 @@ const createAttende = async(req,res) => {
         }
         // validate if there is capacity to add the attendee
         const capacity = eventDB.capacity
-        const currentAttendees = eventDB.attendees.lenght
-        //const currentAttendees = eventDB.attendees.countDocuments()
-        console.log(capacity)
-        console.log(currentAttendees)       
+        const currentAttendees = eventDB.attendees.length
+        const availableTickets = capacity - currentAttendees
         
+        if(availableTickets <= 0 ){
+            return res.status(404).json({
+                ok: false,
+                msg: 'No Tickets Available',
+                availableTickets
+            })
+        }
 
+        // add attendee to the Event    
+        const updatedEventAttendee = await Event.findByIdAndUpdate(eventid, {$push:{attendees: newAttende}}, {new: true})
         
-        //const updatedEventAttendee = await Event.findByIdAndUpdate(id, {$push:{attendees: newAttende}}, {new: true})
-        
-        // save attendee to the Database
-        const attendeeDB = await newAttende.save();
-        // add attendee to the Event
-        eventDB.attendees.push(attendeeDB.id)
-        // save attendee to the Event
-        await eventDB.save()
-        console.log(eventDB)
-
         res.json({
             ok: true, 
-            attendee: updatedEventAttendee,
             msg: 'attendee has bee added to the list',
+            availableTickets
         })
 
         
@@ -159,21 +197,62 @@ const createAttende = async(req,res) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Cant add this attendee'
+            msg: 'Cant add this attendee',
         })
     }
 }
 
 const deleteAttende = async (req,res) => {
+    
+    const eventId = req.params.id
+    const attendeeId = req.params.attendeeid
 
+    try {
+        
+        const eventDB = await (await Event.findById(eventId)).populate('attendees')
+
+        if(!eventDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Event does not exist'
+            }) 
+        }
+
+        attendeesList = eventDB.attendees
+        
+        const attendee = attendeesList.find( attendee => attendee.id === attendeeId)
+
+        if(!attendee){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Atteende does not exist in this Event'
+            }) 
+        }
+
+        const updatedEventAttendee = await Event.findByIdAndUpdate(eventId, {$pull:{attendees: attendee}}, {new: true})
+        
+        res.json({
+            ok: true, 
+            msg: 'Ateendee Deleted',
+            
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "Contact with the Administrator",
+          });
+    }
 }
 
 
 module.exports = {
-    getEvent,
+    getEvents,
     createEvent,
     updateEvent,
     deleteEvent,
+    getAttendee,
     createAttende,
     deleteAttende
 }

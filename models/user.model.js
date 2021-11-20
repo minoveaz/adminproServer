@@ -33,6 +33,9 @@ const userSchema = Schema({
     phoneNumber:{
         type: String
     },
+},
+{
+    timestamps: true
 });
 
 userSchema.method('toJSON', function() {

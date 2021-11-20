@@ -1,5 +1,33 @@
 const { Schema, model} = require('mongoose');
 
+
+const attendeeSchema = Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
+    },
+    email:{
+        type: String,
+        required: true,
+        unique: true,
+    },
+    phoneNumber:{
+        type: String
+    },
+    status:{
+        type: String,
+        required: true,
+        default: 'Registered'
+    },
+})
+
+
+
+
 const EventSchema = Schema({
     name: {
         type: String,
@@ -34,10 +62,7 @@ const EventSchema = Schema({
         type: String,
         required: true,
     },
-    attendees:{
-        type: Schema.Types.ObjectId,
-        ref: 'Attendee'
-    }
+    attendees:[attendeeSchema]
 },{ collection: 'events'});
 
 EventSchema.method('toJSON', function() {

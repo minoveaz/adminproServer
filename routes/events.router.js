@@ -9,11 +9,11 @@ const {check } = require('express-validator')
 const { validateJWT } = require('../middlewares/validate-jwt');
 const { validateField  } = require('../middlewares/validate-field');
 
-const { getEvent, createEvent, updateEvent, deleteEvent, createAttende, deleteAttende} = require('./../controllers/events.controller')
+const { getEvents, createEvent, updateEvent, deleteEvent, getAttendee, createAttende, deleteAttende} = require('./../controllers/events.controller')
 
 const router = Router();
 
-router.get('/',getEvent)
+router.get('/',getEvents)
 
 router.post('/',
     [
@@ -31,9 +31,17 @@ router.put('/:id', validateJWT, updateEvent)
 
 router.delete('/:id',validateJWT,deleteEvent)
 
+
+/*------------------------------------------------------------------- attendees----------------------------------------------------------- */
+/*---------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+router.get('/:id/:attendeeid',validateJWT,getAttendee)
+
 router.post('/:id', 
     [
-        validateJWT,
+        
         check('name', 'The Attende name is required').not().isEmpty(),
         check('lastName', 'The Attende lastName is required').not().isEmpty(),
         check('email', 'The Attende email is required').isEmail(),
@@ -42,5 +50,7 @@ router.post('/:id',
     ], 
     createAttende
 );
+
+router.delete('/:id/:attendeeid',validateJWT,deleteAttende)
 
 module.exports = router;

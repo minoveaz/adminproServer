@@ -23,6 +23,11 @@ const attendeeSchema = Schema({
         required: true,
         default: 'Registered'
     },
+    event:{
+        type:Schema.Types.ObjectId,
+        ref: 'Event',
+        required:true
+    }
 })
 
 attendeeSchema.method('toJSON', function() {
