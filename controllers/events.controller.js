@@ -17,6 +17,40 @@ const getEvents = async( req, res = response) =>{
 }
 
 
+const getEventAttendees = async( req, res = response) =>{
+    const eventId = req.params.id
+    console.log(eventId)
+    try {
+        
+        const eventDB =  await Event.findById(eventId)
+        console.log(eventDB)
+        if(!eventDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Event does not exist'
+            }) 
+        }
+
+        attendees = eventDB.attendees
+        
+        console.log(attendees)
+
+        res.json({
+            ok: true, 
+            msg: 'Attendees List',
+            attendees
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "Contact with the Administrator",
+          });
+    }   
+}
+
+
 const createEvent = async (req,res) => {
     const uid = req.uid;
     const event = new Event({
@@ -249,6 +283,7 @@ const deleteAttende = async (req,res) => {
 
 module.exports = {
     getEvents,
+    getEventAttendees,
     createEvent,
     updateEvent,
     deleteEvent,
