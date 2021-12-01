@@ -4,6 +4,7 @@ const User = require('../models/user.model');
 
 
 
+
 const getEvents = async( req, res = response) =>{
 
     const events = await Event.find()
@@ -236,6 +237,53 @@ const createAttende = async(req,res) => {
     }
 }
 
+const updateAttende = async (req,res) => {
+    const eventId = req.params.id
+    const attendeeId = req.params.attendeeid
+
+    try {
+        
+        const eventDB =  (await Event.findById(eventId)).populate('attendees')
+
+        if(!eventDB){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Event does not exist'
+            }) 
+        }
+
+        attendeesList = eventDB.attendees
+        
+        const attendee = attendeesList.find( attendee => attendee.id === attendeeId)
+
+        if(!attendee){
+            return res.status(404).json({
+                ok: false,
+                msg: 'Atteende does not exist in this Event'
+            }) 
+        }
+
+        const status = req.body.status
+        
+        attendee.status = status
+
+        const updatedAttendee = await eventDB.save()
+
+        res.json({
+            ok: true, 
+            msg: 'Ateendee Updated',
+            updatedAttendee,
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: "Contact with the Administrator",
+          });
+    }
+
+}
+
 const deleteAttende = async (req,res) => {
     
     const eventId = req.params.id
@@ -289,5 +337,6 @@ module.exports = {
     deleteEvent,
     getAttendee,
     createAttende,
+    updateAttende,
     deleteAttende
 }

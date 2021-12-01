@@ -9,7 +9,7 @@ const {check } = require('express-validator')
 const { validateJWT } = require('../middlewares/validate-jwt');
 const { validateField  } = require('../middlewares/validate-field');
 
-const { getEvents,getEventAttendees, createEvent, updateEvent, deleteEvent, getAttendee, createAttende, deleteAttende} = require('./../controllers/events.controller')
+const { getEvents,getEventAttendees, createEvent, updateEvent, deleteEvent, getAttendee, createAttende,updateAttende, deleteAttende} = require('./../controllers/events.controller')
 
 const router = Router();
 
@@ -52,6 +52,9 @@ router.post('/:id',
     ], 
     createAttende
 );
+
+router.put('/:id/:attendeeid', validateJWT, updateAttende)
+
 
 router.delete('/:id/:attendeeid',validateJWT,deleteAttende)
 
