@@ -280,6 +280,7 @@ const updateAttende = async (req,res) => {
             ok: false,
             msg: "Contact with the Administrator",
           });
+          console.log(error)
     }
 
 }
