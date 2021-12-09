@@ -78,7 +78,7 @@ const createEvent = async (req,res) => {
 const updateEvent = async ( req, res) => {
     const id = req.params.id; 
     const uid = req.uid
-    const open2 = (req.body.open === 'True')
+    const open2 = (req.body.open === 'true')
 
 
     try {
