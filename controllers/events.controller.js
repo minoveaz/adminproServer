@@ -33,13 +33,15 @@ const getEventAttendees = async( req, res = response) =>{
         }
 
         attendees = eventDB.attendees
+        eventData = eventDB
         
         console.log(attendees)
 
         res.json({
             ok: true, 
             msg: 'Attendees List',
-            attendees
+            attendees,
+            eventData
         })
 
 
